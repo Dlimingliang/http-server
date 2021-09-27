@@ -8,7 +8,6 @@ import (
 
 func main() {
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/header", helloHttpHandler)
 	http.HandleFunc("/healthz", healthyCheckHandler)
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
@@ -19,9 +18,6 @@ func main() {
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, Welcome to http server")
-}
-
-func helloHttpHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("receive request")
 	for name, headers := range r.Header {
 		fmt.Println("当前的header", name, headers)
