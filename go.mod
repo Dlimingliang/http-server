@@ -1,3 +1,5 @@
 module github.com/limingliang/http-server
 
 go 1.17
+
+require github.com/golang/glog v1.0.0
