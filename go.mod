@@ -1,4 +1,4 @@
-module github.com/limingliang/http-server
+module github.com/Dlimingliang/http-server
 
 go 1.17
 
