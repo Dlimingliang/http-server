@@ -20,7 +20,6 @@ func main() {
 	http.HandleFunc("/", defaultHandler)
 	http.HandleFunc("/healthz", healthyCheckHandler)
 	err := http.ListenAndServe(":9090", nil)
-
 	if err != nil {
 		fmt.Println("listen error", err.Error())
 		return
