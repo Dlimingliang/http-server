@@ -16,6 +16,4 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/httpserver
 FROM alpine
 #FROM scratch
 COPY --from=build /go/src/project/bin/httpserver httpserver
-RUN addgroup --gid 5000 newuser && adduser -h /home/newuser -s /bin/sh -k /dev/null newuser --uid 5000 -G newuser  -S newuser
-USER newuser
 ENTRYPOINT ["./httpserver"]

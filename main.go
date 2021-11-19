@@ -33,6 +33,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set(name, h)
 		}
 	}
+	glog.V(0).Info("env-version", os.Getenv("VERSION"))
 	w.Header().Set("VERSION", os.Getenv("VERSION"))
 	ip := remoteIp(r)
 	glog.V(0).Info("client ip:", ip)
