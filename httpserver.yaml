@@ -1,0 +1,41 @@
+# 应用上云yaml编写实现目标
+# 1. 高可用: replicas设置为3，多副本保证一个pod挂掉不会影响整体服务.和亲和性设置
+# 升级策略: 滚动更新strategy和pdb设置
+# 非root用户运行 securycontext
+# 优雅启动: probe设置
+# 优雅终止
+# 资源需求和Qos保证: resource设置
+# 日常运维需求，日志等级
+# 配置和代码分离: configmap设置env。pod挂载
+# 锦上添花: label更好的配置、创建新的namespace
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver
+  labels:
+    app: httpserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpserver
+  template:
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - httpserver
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - name: httpserver
+          image: limingliang/httpserver:v1.0
+          imagePullPolicy: IfNotPresent
+
