@@ -21,6 +21,9 @@ spec:
     matchLabels:
       app: httpserver
   template:
+    metadata:
+      labels:
+        app: httpserver
     spec:
       affinity:
         podAntiAffinity:
