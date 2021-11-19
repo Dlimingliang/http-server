@@ -1,5 +1,7 @@
 # 应用上云yaml编写实现目标
-# 1. 高可用: replicas设置为3，多副本保证一个pod挂掉不会影响整体服务.和亲和性设置
+# 1. 高可用:
+# - replicas设置为3，多副本保证一个pod挂掉不会影响整体服务.
+# - 设置podAntiAffinity。保证pod被调度到多个节点上，避免节点不可用影响整体服务,这里因为本地环境只有一个节点，顾设置了软亲和性，避免pod处于pending状态.
 # 升级策略: 滚动更新strategy和pdb设置
 # 非root用户运行 securycontext
 # 优雅启动: probe设置
