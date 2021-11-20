@@ -13,7 +13,7 @@ COPY . /go/src/project/
 ENV GOPROXY=https://goproxy.cn,direct
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/httpserver
 
-FROM alpine
-#FROM scratch
+#FROM alpine
+FROM scratch
 COPY --from=build /go/src/project/bin/httpserver httpserver
 ENTRYPOINT ["./httpserver"]
