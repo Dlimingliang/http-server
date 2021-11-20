@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/golang/glog"
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 )
 
 const (
@@ -16,15 +19,37 @@ const (
 )
 
 func main() {
+
 	glog.V(0).Info("Starting http server...")
-	glog.Error("i am error message")
-	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/healthz", healthyCheckHandler)
-	err := http.ListenAndServe(":9090", nil)
-	if err != nil {
-		glog.Error("listen error", err.Error())
-		return
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", defaultHandler)
+	mux.HandleFunc("/healthz", healthyCheckHandler)
+
+	srv := http.Server{
+		Addr:    ":9090",
+		Handler: mux,
 	}
+
+	processed := make(chan struct{})
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+		<-c
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(ctx); nil != err {
+			glog.Error("server shutdown failed, err: %v\n", err)
+		}
+		glog.V(0).Info("server gracefully shutdown")
+		close(processed)
+	}()
+
+	err := srv.ListenAndServe()
+	if http.ErrServerClosed != err {
+		glog.Error("server not gracefully shutdown, err :%v\n", err)
+	}
+
+	<-processed
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +65,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	resp, _ := json.Marshal(map[string]string{
 		"ip": ip, "statusCode": OkStr,
 	})
+	time.Sleep(2 * time.Second)
 	w.Write(resp)
 }
 
