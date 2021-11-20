@@ -77,7 +77,7 @@ spec:
         runAsGroup: 5000
       containers:
         - name: httpserver
-          image: limingliang/httpserver:v1.1
+          image: limingliang/httpserver:v10.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090
