@@ -66,7 +66,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	resp, _ := json.Marshal(map[string]string{
 		"ip": ip, "statusCode": OkStr,
 	})
-	//time.Sleep(2 * time.Second)
+	time.Sleep(5 * time.Second)
 	w.Write(resp)
 }
 

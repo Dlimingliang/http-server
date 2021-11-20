@@ -1,5 +1,5 @@
 project=httpserver
-version=v1.0
+version=v12.1
 
 version:
 	echo ${version}
