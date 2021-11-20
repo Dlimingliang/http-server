@@ -37,6 +37,21 @@ data:
   VERSION: v1.0
 
 ---
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver
+  labels:
+    app: httpserver
+spec:
+  selector:
+    app: httpserver
+  ports:
+    - port: 9090
+      targetPort: 9090
+
+---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -60,6 +75,7 @@ spec:
       labels:
         app: httpserver
     spec:
+      terminationGracePeriodSeconds: 30
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -77,7 +93,7 @@ spec:
         runAsGroup: 5000
       containers:
         - name: httpserver
-          image: limingliang/httpserver:v10.0
+          image: limingliang/httpserver:v12.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090
