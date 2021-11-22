@@ -12,11 +12,11 @@
 # 5. 配置和代码分离
 # - 环境变量 httpserver里面获取了环境变量。 这里我们使用configmap设置环境变量。
 # 6. 优雅启动
-# - 设置startupProbe,避免应用启动过慢，确保应用没在启动之前就被kubelet重启
 # - 设置readinessProbe,避免应用没有准备就绪就被接收客户端流量
 # 7. 优雅终止
 # - 在main.go中，捕获sigterm,然后调用服务地shutdown方法关闭所有开启的监听器，并且确保活跃连接的正常返回。处理完成之后再退出主程序。
 # 8. 探活
+# - 设置startupProbe,避免应用启动过慢，确保应用没在启动之前就被kubelet重启
 # - 设置livenessProbe,保证应用不活地时候，kubelet重启应用
 # 日常运维需求，日志等级
 # 锦上添花: label更好的配置、创建新的namespace
