@@ -1,7 +1,7 @@
 # 应用上云yaml编写实现目标
 # 1. 高可用
 # - replicas设置为3，多副本保证一个pod挂掉不会影响整体服务.
-# - 设置podAntiAffinity。保证pod被调度到多个节点上，避免节点不可用影响整体服务,这里因为本地环境只有一个节点，顾设置了软亲和性，避免pod处于pending状态.
+# - 设置podAntiAffinity。保证pod被调度到多个节点上，避免节点不可用影响整体服务,这里因为本地环境只有一个节点，故设置了软亲和性，避免pod处于pending状态.
 # 2. 非root用户运行
 # - securityContext 指定用户和组,并且设置不允许提升权限allowPrivilegeEscalation=false
 # 3. 资源需求和Qos保证
@@ -15,6 +15,7 @@
 # - 设置readinessProbe,避免应用没有准备就绪就被接收客户端流量
 # 7. 优雅终止
 # - 在main.go中，捕获sigterm,然后调用服务地shutdown方法关闭所有开启的监听器，并且确保活跃连接的正常返回。处理完成之后再退出主程序。
+# - 但是在shutdown之前，我们希望endpoint的变更传遍kube-proxy、ingress、servicemesh等组件，故设置prestop，等待15秒在shutdown。
 # 8. 探活
 # - 设置startupProbe,避免应用启动过慢，确保应用没在启动之前就被kubelet重启
 # - 设置livenessProbe,保证应用不活地时候，kubelet重启应用
@@ -98,7 +99,7 @@ spec:
         runAsGroup: 5000
       containers:
         - name: httpserver
-          image: limingliang/httpserver:v12.2
+          image: limingliang/httpserver:v20.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090
@@ -139,3 +140,8 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 1
             failureThreshold: 3
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /preStop
+                port: 9090

@@ -24,6 +24,7 @@ func main() {
 	glog.V(0).Info("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", defaultHandler)
+	mux.HandleFunc("/preStop", preStopHandler)
 	mux.HandleFunc("/healthz", healthyCheckHandler)
 
 	srv := http.Server{
@@ -36,8 +37,10 @@ func main() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 		<-c
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
+		glog.V(0).Info("receive sgiterm, prepare shutdown")
+		//time.Sleep(15 * time.Second)
 		if err := srv.Shutdown(ctx); nil != err {
 			glog.Error("server shutdown failed, err: %v\n", err)
 		}
@@ -51,6 +54,12 @@ func main() {
 	}
 
 	<-processed
+}
+
+func preStopHandler(w http.ResponseWriter, r *http.Request) {
+	glog.V(0).Info("receive preStop...")
+	time.Sleep(15 * time.Second)
+	glog.V(0).Info("preStop ending...")
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
