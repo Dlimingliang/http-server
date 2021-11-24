@@ -23,8 +23,6 @@
 # - 创建对应service
 # 10. 暴露到集群外部
 # - 创建对应ingress
-# 日常运维需求，日志等级
-# 锦上添花: label更好的配置
 
 # tls secret
 apiVersion: v1
