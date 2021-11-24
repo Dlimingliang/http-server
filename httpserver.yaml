@@ -19,9 +19,28 @@
 # 8. 探活
 # - 设置startupProbe,避免应用启动过慢，确保应用没在启动之前就被kubelet重启
 # - 设置livenessProbe,保证应用不活地时候，kubelet重启应用
+# 9. 暴露给集群内部用户
+# - 创建对应service
+# 10. 暴露到集群外部
+# - 创建对应ingress
 # 日常运维需求，日志等级
-# 锦上添花: label更好的配置、创建新的namespace
+# 锦上添花: label更好的配置
 
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver
+  labels:
+    app: httpserver
+spec:
+  selector:
+    app: httpserver
+  ports:
+    - port: 9090
+      targetPort: 9090
+
+---
 # PDB
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -41,21 +60,6 @@ metadata:
   name: httpserver-env
 data:
   VERSION: v1.0
-
----
-# service
-apiVersion: v1
-kind: Service
-metadata:
-  name: httpserver
-  labels:
-    app: httpserver
-spec:
-  selector:
-    app: httpserver
-  ports:
-    - port: 9090
-      targetPort: 9090
 
 ---
 # Deployment
