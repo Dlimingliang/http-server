@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/Dlimingliang/http-server/metrics"
 	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
@@ -22,10 +25,12 @@ const (
 func main() {
 
 	glog.V(0).Info("Starting http server...")
+	metrics.Register()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", defaultHandler)
 	mux.HandleFunc("/preStop", preStopHandler)
 	mux.HandleFunc("/healthz", healthyCheckHandler)
+	mux.Handle("/metrics", promhttp.Handler())
 
 	srv := http.Server{
 		Addr:    ":9090",
@@ -63,6 +68,13 @@ func preStopHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
+
+	timer := metrics.NewTimer()
+	defer timer.ObserveTotal()
+	//time.Sleep(5 * time.Second)
+	delay := randInt(10, 2000)
+	time.Sleep(time.Millisecond * time.Duration(delay))
+
 	for name, headers := range r.Header {
 		for _, h := range headers {
 			w.Header().Set(name, h)
@@ -75,8 +87,12 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	resp, _ := json.Marshal(map[string]string{
 		"ip": ip, "statusCode": OkStr,
 	})
-	//time.Sleep(5 * time.Second)
 	w.Write(resp)
+}
+
+func randInt(min int, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return min + rand.Intn(max-min)
 }
 
 func healthyCheckHandler(w http.ResponseWriter, r *http.Request) {
