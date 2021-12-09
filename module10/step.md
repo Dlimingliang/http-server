@@ -1,6 +1,5 @@
 # 模块十作业
 
----
 ### 作业要求
 
 1. 为HTTPServer添加0-2秒的随机延时
@@ -26,4 +25,4 @@
 ```
 重新构建镜像，并且修改yaml中使用最新的镜像,并且添加prometheus的抓取标签
 ```
-![]()![image](./prmetheus-target.png)
+![aaa](./prmetheus-target.png)
