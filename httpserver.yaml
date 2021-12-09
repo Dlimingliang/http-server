@@ -119,6 +119,9 @@ spec:
     metadata:
       labels:
         app: httpserver
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
     spec:
       terminationGracePeriodSeconds: 30
       affinity:

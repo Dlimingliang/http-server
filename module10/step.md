@@ -24,5 +24,5 @@
 
 3. 将HTTPServer部署至测试集群，并且完成Prometheus配置
 ```
-重新构建镜像，并且修改yaml中使用最新的镜像
+重新构建镜像，并且修改yaml中使用最新的镜像,并且添加prometheus的抓取标签
 ```
