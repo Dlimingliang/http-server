@@ -26,4 +26,4 @@
 ```
 重新构建镜像，并且修改yaml中使用最新的镜像,并且添加prometheus的抓取标签
 ```
-![image](./prmetheus-target.png)
+![]()![image](./prmetheus-target.png)
