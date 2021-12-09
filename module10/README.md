@@ -24,5 +24,17 @@
 3. 将HTTPServer部署至测试集群，并且完成Prometheus配置
 ```
 重新构建镜像，并且修改yaml中使用最新的镜像,并且添加prometheus的抓取标签
+prometheus.io/scrape: "true"
+prometheus.io/port: "9090"
 ```
 ![]()![作业](./prometheus-target.png)
+
+4. 从Promethus界面中查询延时指标数据
+
+![]()![作业](./httpserver-metrics.png)
+
+5. 创建一个Grafana Dashboard展现延时分配情况
+
+![]()![作业](./httpserver-grafana.png)
+
+
