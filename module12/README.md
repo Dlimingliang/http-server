@@ -38,6 +38,11 @@ export INGRESS_IP=10.96.43.242
 curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/hello -v
 ```
 ![]()![作业](./image/ingress-gateway.png)
+```
+验证七层路由规则
+curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/httpserver/healthz -v
+```
+![]()![作业](./image/seven.png)
 
 
 
