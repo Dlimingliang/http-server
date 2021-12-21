@@ -9,8 +9,16 @@ spec:
     - lml-cncamp.izaodao.com
   http:
     - match:
-        - port: 80
+      - uri:
+          exact: "/httpserver/healthz"
+          rewrite:
+            uri: "/healthz"
       route:
+        - destination:
+            host: httpserver.httpserver.svc.cluster.local
+            port:
+              number: 9090
+    - route:
         - destination:
             host: httpserver.httpserver.svc.cluster.local
             port:
