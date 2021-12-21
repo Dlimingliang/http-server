@@ -11,8 +11,8 @@ spec:
     - match:
       - uri:
           exact: "/httpserver/healthz"
-          rewrite:
-            uri: "/healthz"
+      rewrite:
+        uri: "/healthz"
       route:
         - destination:
             host: httpserver.httpserver.svc.cluster.local
