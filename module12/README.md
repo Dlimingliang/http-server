@@ -24,7 +24,20 @@ kubectl label ns httpserver istio-injection=enabled
 使用module12/httpser/目录下的httpserver.yaml
 ```
 3. 将httpserver以istioIngressGateway形式发布
-
+```
+使用module12/httpser/目录下的httpserver-istio.yaml.添加gateway和对应的虚拟服务
+```
+4. 验证访问情况
+```
+# 查看IngressGateway的CLUSTER-IP
+kubectl get service -n istio-system 
+NAME                   TYPE           CLUSTER-IP
+istio-ingressgateway   LoadBalancer   10.96.43.242
+# 设置环境变量，并且访问我们的服务
+export INGRESS_IP=10.96.43.242
+curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/hello -v
+```
+![]()![作业](./image/ingress-gateway.png)
 
 
 

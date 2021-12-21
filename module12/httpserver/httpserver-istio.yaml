@@ -1,17 +1,32 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: simple
+  name: httpserver
 spec:
   gateways:
-    - simple
+    - httpserver
   hosts:
-    - simple.cncamp.io
+    - lml-cncamp.izaodao.com
   http:
     - match:
         - port: 80
       route:
         - destination:
-            host: simple.simple.svc.cluster.local
+            host: httpserver.httpserver.svc.cluster.local
             port:
-              number: 80
+              number: 9090
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: httpserver
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - hosts:
+        - lml-cncamp.izaodao.com
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
