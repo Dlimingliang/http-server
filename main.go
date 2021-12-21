@@ -45,7 +45,6 @@ func main() {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		glog.V(0).Info("receive sgiterm, prepare shutdown")
-		//time.Sleep(15 * time.Second)
 		if err := srv.Shutdown(ctx); nil != err {
 			glog.Error("server shutdown failed, err: %v\n", err)
 		}
@@ -71,10 +70,9 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 	timer := metrics.NewTimer()
 	defer timer.ObserveTotal()
-	//time.Sleep(5 * time.Second)
 	delay := randInt(10, 2000)
+	glog.V(0).Info("time-delay:", delay)
 	time.Sleep(time.Millisecond * time.Duration(delay))
-
 	for name, headers := range r.Header {
 		for _, h := range headers {
 			w.Header().Set(name, h)
