@@ -1,5 +1,5 @@
 project=service2
-version=v2.0
+version=v3.0
 
 version:
 	echo ${version}

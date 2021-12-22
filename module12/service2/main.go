@@ -72,9 +72,6 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(0).Info("service2 handler")
 	timer := metrics.NewTimer()
 	defer timer.ObserveTotal()
-	delay := randInt(10, 2000)
-	glog.V(0).Info("time-delay:", delay)
-	time.Sleep(time.Millisecond * time.Duration(delay))
 	for k, v := range r.Header {
 		io.WriteString(w, fmt.Sprintf("%s=%s\n", k, v))
 	}

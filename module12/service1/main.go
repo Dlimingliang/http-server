@@ -50,10 +50,6 @@ func main() {
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(0).Info("service1 handler")
-	delay := randInt(10, 2000)
-	glog.V(0).Info("time-delay:", delay)
-	time.Sleep(time.Millisecond * time.Duration(delay))
-
 	req, err := http.NewRequest("GET", "http://service2/hello", nil)
 	if err != nil {
 		glog.Error("#{err}")

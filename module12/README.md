@@ -20,7 +20,11 @@ kubectl label ns httpserver istio-injection=enabled
 ```
 
 2. 部署我们的service0.yaml、service1.yaml、service2.yaml
-
+```
+kubectl apply -f service0.yaml
+kubectl apply -f service1.yaml
+kubectl apply -f service2.yaml
+```
 3. 生成tls证书,并且以IngressGateway形式发布
 ``` 
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cncamp Inc./CN=*.izaodao.com' -keyout httpserver.io.key -out httpserver.io.crt
@@ -40,8 +44,9 @@ curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao
 ```
 ![]()![作业](./image/gateway.png)
 
-5. 部署jaeger.yaml,并且验证
+5. 部署jaeger.yaml,并且查看jaeger
 ``` 
+# 这里使用老师的yaml
 kubectl apply -f jaeger.yaml
 kubectl edit configmap istio -n istio-system
 set tracing.sampling=100
