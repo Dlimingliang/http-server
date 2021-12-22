@@ -33,7 +33,7 @@ func main() {
 	mux.Handle("/metrics", promhttp.Handler())
 
 	srv := http.Server{
-		Addr:    ":9092",
+		Addr:    ":9090",
 		Handler: mux,
 	}
 

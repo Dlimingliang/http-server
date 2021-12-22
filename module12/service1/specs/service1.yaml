@@ -1,0 +1,117 @@
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: service1
+  namespace: httpserver
+  labels:
+    app: service1
+spec:
+  selector:
+    app: service1
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: http-port
+---
+# env configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service1-env
+  namespace: httpserver
+data:
+  VERSION: v1.0
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service1
+  namespace: httpserver
+  labels:
+    app: service1
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: service1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: service1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      terminationGracePeriodSeconds: 30
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - service2
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      securityContext:
+        runAsUser: 5000
+        runAsGroup: 5000
+      containers:
+        - name: service0
+          image: limingliang/service1:v1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+          env:
+            - name: VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: VERSION
+                  name: httpserver-env
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 300m
+              memory: 300Mi
+            limits:
+              cpu: 300m
+              memory: 300Mi
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            periodSeconds: 3
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /preStop
+                port: 9090

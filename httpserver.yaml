@@ -55,7 +55,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: httpserver
+                name: service0
                 port:
                   name: http-port
 
@@ -133,14 +133,14 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - httpserver
+                        - service0
                 topologyKey: kubernetes.io/hostname
               weight: 100
       securityContext:
         runAsUser: 5000
         runAsGroup: 5000
       containers:
-        - name: httpserver
+        - name: service0
           image: limingliang/httpserver:v20.1
           imagePullPolicy: IfNotPresent
           ports:

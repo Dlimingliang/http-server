@@ -1,0 +1,22 @@
+project=service0
+version=v1.0
+
+version:
+	echo ${version}
+
+build: version
+	mkdir -p bin/amd64
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/amd64/${project} .
+
+build-mac: version
+	mkdir -p bin/amd64
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o bin/amd64/${project}-mac .
+
+release: build
+	docker build -t limingliang/${project}:${version} .
+
+push: release
+	docker push limingliang/${project}:${version}
+
+
+
