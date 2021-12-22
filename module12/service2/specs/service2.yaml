@@ -78,7 +78,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: VERSION
-                  name: httpserver-env
+                  name: service2-env
           securityContext:
             allowPrivilegeEscalation: false
           resources:
@@ -104,7 +104,7 @@ spec:
             failureThreshold: 2
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 9090
             initialDelaySeconds: 5
             periodSeconds: 10

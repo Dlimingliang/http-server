@@ -18,6 +18,15 @@ istioctl install --set profile=demo -y
 kubectl create ns httpserver
 kubectl label ns httpserver istio-injection=enabled
 ```
+
+2. 部署我们的service0.yaml、service1.yaml、service2.yaml
+
+
+
+
+
+
+
 2. 把我们之前的httpserver.yaml改到httpser的namespace.然后部署。会发现一个pod内会出现俩个容器
 ```
 使用module12/httpser/目录下的httpserver.yaml

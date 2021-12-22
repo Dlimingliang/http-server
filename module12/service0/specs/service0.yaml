@@ -104,7 +104,7 @@ spec:
             failureThreshold: 2
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 9090
             initialDelaySeconds: 5
             periodSeconds: 10

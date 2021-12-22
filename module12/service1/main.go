@@ -18,6 +18,7 @@ func main() {
 	glog.V(0).Info("Starting service1 server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hello", defaultHandler)
+	mux.HandleFunc("/healthz", healthyCheckHandler)
 
 	srv := http.Server{
 		Addr:    ":9090",
@@ -77,4 +78,8 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 func randInt(min int, max int) int {
 	rand.Seed(time.Now().UTC().UnixNano())
 	return min + rand.Intn(max-min)
+}
+
+func healthyCheckHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(200)
 }
