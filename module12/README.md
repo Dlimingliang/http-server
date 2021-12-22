@@ -7,7 +7,6 @@
 3. 7层路由规则
 4. open tracing
 
-
 ### 完成过程
 
 1. 安装istio,并且在我们想要运行的环境启用envoy的sidecar注入.
@@ -44,5 +43,12 @@ curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/httpserver/healthz -v
 ```
 ![]()![作业](./image/seven.png)
 
-
+5. 添加tls能力
+``` 
+# 生成证书
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cncamp Inc./CN=*.izaodao.com' -keyout httpserver.io.key -out httpserver.io.crt
+# 创建tls secret
+kubectl create -n httpserver secret tls httpserver-credential --key=httpserver.io.key --cert=httpserver.io.crt
+# 在httpserver-istio中添加tls
+```
 

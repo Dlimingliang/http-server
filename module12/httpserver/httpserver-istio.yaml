@@ -38,3 +38,6 @@ spec:
         name: http
         number: 80
         protocol: HTTP
+      tls:
+        mode: SIMPLE
+        credentialName: httpserver-credential
