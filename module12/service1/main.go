@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/golang/glog"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -53,6 +52,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(0).Info("service1 handler")
 	delay := randInt(10, 2000)
 	glog.V(0).Info("time-delay:", delay)
+	time.Sleep(time.Millisecond * time.Duration(delay))
 
 	req, err := http.NewRequest("GET", "http://service2/hello", nil)
 	if err != nil {
@@ -70,9 +70,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		glog.Info("HTTP get fail with error:", "error", err)
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	w.Write(body)
+	resp.Write(w)
 }
 
 func randInt(min int, max int) int {

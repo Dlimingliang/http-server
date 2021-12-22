@@ -45,5 +45,6 @@ curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao
 kubectl apply -f jaeger.yaml
 kubectl edit configmap istio -n istio-system
 set tracing.sampling=100
+kubectl patch svc -n istio-system tracing -p '{"spec":{"type": "NodePort"}}'
 ```
 

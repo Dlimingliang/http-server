@@ -69,7 +69,7 @@ spec:
         runAsGroup: 5000
       containers:
         - name: service0
-          image: limingliang/service2:v1.0
+          image: limingliang/service2:v2.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090

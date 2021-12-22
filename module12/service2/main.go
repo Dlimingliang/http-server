@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"github.com/Dlimingliang/http-server/metrics"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"io"
 	"math/rand"
 	"net"
 	"net/http"
@@ -74,19 +75,9 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	delay := randInt(10, 2000)
 	glog.V(0).Info("time-delay:", delay)
 	time.Sleep(time.Millisecond * time.Duration(delay))
-	for name, headers := range r.Header {
-		for _, h := range headers {
-			w.Header().Set(name, h)
-		}
+	for k, v := range r.Header {
+		io.WriteString(w, fmt.Sprintf("%s=%s\n", k, v))
 	}
-	glog.V(0).Info("env-version:", os.Getenv("VERSION"))
-	w.Header().Set("VERSION", os.Getenv("VERSION"))
-	ip := remoteIp(r)
-	glog.V(0).Info("client ip:", ip)
-	resp, _ := json.Marshal(map[string]string{
-		"ip": ip, "statusCode": OkStr,
-	})
-	w.Write(resp)
 }
 
 func randInt(min int, max int) int {
