@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: httpserver
+  namespace: httpserver
 spec:
   gateways:
     - httpserver
@@ -10,15 +11,10 @@ spec:
   http:
     - match:
       - uri:
-          exact: "/httpserver/healthz"
+          prefix: /httpserver/
       rewrite:
-        uri: "/healthz"
+        uri: /
       route:
-        - destination:
-            host: httpserver.httpserver.svc.cluster.local
-            port:
-              number: 9090
-    - route:
         - destination:
             host: httpserver.httpserver.svc.cluster.local
             port:
@@ -28,6 +24,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: httpserver
+  namespace: httpserver
 spec:
   selector:
     istio: ingressgateway
@@ -38,6 +35,10 @@ spec:
         name: http
         number: 80
         protocol: HTTP
-      tls:
-        mode: SIMPLE
-        credentialName: httpserver-credential
+#      port:
+#        name: https
+#        number: 443
+#        protocol: HTTPS
+#      tls:
+#        mode: SIMPLE
+#        credentialName: httpserver-credential
