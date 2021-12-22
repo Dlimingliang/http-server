@@ -21,47 +21,29 @@ kubectl label ns httpserver istio-injection=enabled
 
 2. 部署我们的service0.yaml、service1.yaml、service2.yaml
 
-
-
-
-
-
-
-2. 把我们之前的httpserver.yaml改到httpser的namespace.然后部署。会发现一个pod内会出现俩个容器
-```
-使用module12/httpser/目录下的httpserver.yaml
-```
-3. 将httpserver以istioIngressGateway形式发布
-```
-使用module12/httpser/目录下的httpserver-istio.yaml.添加gateway和对应的虚拟服务
+3. 生成tls证书,并且以IngressGateway形式发布
+``` 
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cncamp Inc./CN=*.izaodao.com' -keyout httpserver.io.key -out httpserver.io.crt
+kubectl create -n  istio-system secret tls service0-credential --key=httpserver.io.key --cert=httpserver.io.crt
+kubectl apply -f istio-spec.yaml
 ```
 4. 验证访问情况
-```
+``` 
 # 查看IngressGateway的CLUSTER-IP
 kubectl get service -n istio-system 
 NAME                   TYPE           CLUSTER-IP
 istio-ingressgateway   LoadBalancer   10.96.43.242
 # 设置环境变量，并且访问我们的服务
 export INGRESS_IP=10.96.43.242
-curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/hello -v
+# 同时验证tls和7层规则
+curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao.com/service0/healthz -v -k
 ```
-![]()![作业](./image/ingress-gateway.png)
-```
-验证七层路由规则
-curl -H "Host: lml-cncamp.izaodao.com" $INGRESS_IP/httpserver/healthz -v
-```
-![]()![作业](./image/seven.png)
+![]()![作业](./image/gateway.png)
 
-5. 添加tls能力
+5. 部署jaeger.yaml,并且验证
 ``` 
-# 生成证书
-openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cncamp Inc./CN=*.izaodao.com' -keyout httpserver.io.key -out httpserver.io.crt
-# 创建tls secret
-kubectl create -n  istio-system secret tls httpserver-credential --key=httpserver.io.key --cert=httpserver.io.crt
-# 在httpserver-istio中添加tls
-curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao.com/httpserver/hello -v -k
-curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao.com/httpserver/healthz -v -k
+kubectl apply -f jaeger.yaml
+kubectl edit configmap istio -n istio-system
+set tracing.sampling=100
 ```
-
-6. 设置tracing
 
