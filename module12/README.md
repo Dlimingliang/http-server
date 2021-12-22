@@ -47,6 +47,5 @@ curl --resolve lml-cncamp.izaodao.com:443:$INGRESS_IP https://lml-cncamp.izaodao
 5. 部署jaeger.yaml,并且查看jaeger
 ``` 
 # 这里使用老师的yaml yaml地址https://github.com/cncamp/101/tree/master/module12/istio/tracing
-kubectl patch svc -n istio-system tracing -p '{"spec":{"type": "NodePort"}}'
 ```
 ![]()![作业](./image/jaeger.png)
