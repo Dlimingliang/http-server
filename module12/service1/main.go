@@ -20,7 +20,7 @@ func main() {
 	mux.HandleFunc("/hello", defaultHandler)
 
 	srv := http.Server{
-		Addr:    ":9091",
+		Addr:    ":9090",
 		Handler: mux,
 	}
 
@@ -53,7 +53,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	delay := randInt(10, 2000)
 	glog.V(0).Info("time-delay:", delay)
 
-	req, err := http.NewRequest("GET", "http://localhost:9092/hello", nil)
+	req, err := http.NewRequest("GET", "http://service2/hello", nil)
 	if err != nil {
 		glog.Error("#{err}")
 	}
