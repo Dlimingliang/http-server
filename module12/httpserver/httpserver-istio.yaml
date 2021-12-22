@@ -31,14 +31,14 @@ spec:
   servers:
     - hosts:
         - lml-cncamp.izaodao.com
-      port:
-        name: http
-        number: 80
-        protocol: HTTP
 #      port:
-#        name: https
-#        number: 443
-#        protocol: HTTPS
-#      tls:
-#        mode: SIMPLE
-#        credentialName: httpserver-credential
+#        name: http
+#        number: 80
+#        protocol: HTTP
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: httpserver-credential
